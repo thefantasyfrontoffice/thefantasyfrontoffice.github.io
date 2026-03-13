@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MLB Ballaholics — League Rulebook</title>
+<meta name="description" content="Official custom rules, auction dollar table, and trade ledger for the MLB Ballaholics ESPN fantasy baseball league.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:        #134A8E;
+    --blue-dark:   #0d3568;
+    --blue-deep:   #081e3f;
+    --red:         #E8291C;
+    --powder:      #a8c8e8;
+    --powder-lt:   #d4e8f5;
+    --white:       #ffffff;
+    --off-white:   #f4f7fb;
+    --slate:       #e8eef6;
+    --ink:         #0a1628;
+    --body-text:   #2a3d57;
+    --muted:       #5a7499;
+    --border:      rgba(19,74,142,0.15);
+    --border-faint:rgba(19,74,142,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--off-white);
+    color: var(--ink);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--blue-deep);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-img {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1564890350535-7bf6594aa2d5?q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center 40%;
+    opacity: 0.28;
+  }
+
+  /* Subtle diagonal stripe texture — like pinstripes on the road jersey */
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      -55deg,
+      transparent,
+      transparent 18px,
+      rgba(255,255,255,0.025) 18px,
+      rgba(255,255,255,0.025) 19px
+    );
+    pointer-events: none;
+  }
+
+  /* Red accent bar at very top — like the cap stripe */
+  header::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--red);
+  }
+
+  .header-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 56px 52px 48px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .header-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(168,200,232,0.8);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .header-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 9vw, 104px);
+    line-height: 0.88;
+    letter-spacing: 0.02em;
+    color: var(--white);
+  }
+
+  .header-title em {
+    display: block;
+    font-style: normal;
+    /* Powder blue — the classic Blue Jays alternate colour */
+    color: var(--powder);
+  }
+
+  .header-right {
+    text-align: right;
+    padding-bottom: 4px;
+    flex-shrink: 0;
+  }
+
+  .sport-toggle {
+    display: flex;
+    gap: 2px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 4px;
+    padding: 3px;
+  }
+
+  .sport-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    background: transparent;
+    color: rgba(255,255,255,0.45);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .sport-btn.active {
+    background: var(--red);
+    color: var(--white);
+  }
+
+  .sport-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .sport-btn:not(.active):not(:disabled):hover {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.8);
+  }
+
+  .header-date {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(168,200,232,0.55);
+    margin-top: 10px;
+  }
+
+  /* Bottom border: blue-to-red split stripe like the Jays' pants piping */
+  .header-stripe {
+    height: 5px;
+    background: linear-gradient(90deg, #1a5aa8 0%, #1a5aa8 60%, var(--red) 60%, var(--red) 100%);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--blue);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    box-shadow: 0 2px 12px rgba(8,30,63,0.18);
+  }
+
+  nav::-webkit-scrollbar { display: none; }
+
+  .nav-inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    display: flex;
+    padding: 0 16px;
+    min-width: max-content;
+  }
+
+  .nav-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    padding: 14px;
+    white-space: nowrap;
+    text-decoration: none;
+    display: block;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .nav-item:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.06); }
+  .nav-item.active { color: var(--white); border-bottom-color: var(--red); }
+
+  /* scroll-margin-top set dynamically in JS to match actual nav height */
+
+  /* MAIN */
+  main {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 72px 52px 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+  }
+
+  /* SECTION */
+  .section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 28px;
+    gap: 16px;
+  }
+
+  .section-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    background: var(--red);
+    color: var(--white);
+    padding: 4px 10px 3px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 34px;
+    letter-spacing: 0.05em;
+    color: var(--blue-deep);
+    line-height: 1;
+  }
+
+  .section-divider {
+    flex: 1;
+    height: 2px;
+    background: rgba(19,74,142,0.12);
+  }
+
+  /* RULES */
+  .rules-list { list-style: none; }
+
+  .rule-item {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border-faint);
+  }
+
+  .rule-item:first-child { border-top: 1px solid var(--border-faint); }
+
+  .rule-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(19,74,142,0.85);
+    padding-top: 2px;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+
+  .rule-body {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--body-text);
+  }
+
+  .rule-body strong {
+    color: var(--blue-deep);
+    font-weight: 600;
+  }
+
+  .rule-note {
+    margin-top: 12px;
+    padding: 13px 16px;
+    border-left: 3px solid var(--blue);
+    background: rgba(19,74,142,0.05);
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--muted);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .rule-note strong {
+    color: var(--blue);
+    font-weight: 600;
+  }
+
+  /* AUCTION TABLE */
+  .auction-table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(8,30,63,0.06);
+  }
+
+  .auction-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .auction-table thead {
+    background: var(--blue-deep);
+  }
+
+  .auction-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(212,232,245,0.85); /* --powder-lt at 85% */
+    padding: 14px 24px;
+    text-align: left;
+    font-weight: 400;
+  }
+
+  .auction-table td {
+    padding: 13px 24px;
+    font-size: 15px;
+    color: var(--body-text);
+    border-bottom: 1px solid var(--border-faint);
+    background: var(--white);
+  }
+
+  .auction-table tbody tr:nth-child(even) td { background: var(--off-white); }
+  .auction-table tbody tr:last-child td { border-bottom: none; }
+  .auction-table tbody tr:hover td,
+  .auction-table tbody tr:nth-child(even):hover td { background: var(--powder-lt); color: var(--blue-deep); }
+
+  .auction-table .dollars {
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    color: var(--blue);
+    font-weight: 500;
+  }
+
+  /* COLLAPSIBLE SEASON */
+  .season-block {
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(8,30,63,0.05);
+  }
+
+  .season-toggle {
+    width: 100%;
+    background: var(--blue-deep);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+    transition: background 0.2s;
+  }
+
+  .season-toggle:hover { background: var(--blue-dark); }
+
+  .season-toggle-left { display: flex; align-items: center; gap: 14px; }
+
+  .season-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.06em;
+    color: var(--white);
+  }
+
+  .season-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(168,200,232,0.65);
+    letter-spacing: 0.1em;
+  }
+
+  .season-chevron {
+    color: rgba(168,200,232,0.55);
+    font-size: 11px;
+    transition: transform 0.25s ease;
+  }
+
+  .season-block.open .season-chevron { transform: rotate(180deg); }
+
+  .season-body {
+    display: none;
+    background: var(--white);
+    padding: 24px 22px 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .season-block.open .season-body { display: block; }
+
+  /* TRADE TIMELINE */
+  .trade-timeline {
+    position: relative;
+    padding-left: 20px;
+  }
+
+  .trade-timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .trade-group {
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .trade-group::before {
+    content: '';
+    position: absolute;
+    left: -19px;
+    top: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(19,74,142,0.4);
+  }
+
+  .trade-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: rgba(19,74,142,0.55);
+    margin-bottom: 7px;
+    text-transform: uppercase;
+  }
+
+  .trade-card {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(8,30,63,0.05);
+  }
+
+  .trade-parties {
+    display: grid;
+    grid-template-columns: 1fr 30px 1fr;
+    align-items: stretch;
+  }
+
+  .trade-side { padding: 14px 16px; background: var(--white); }
+  .trade-side:last-child { background: var(--off-white); }
+
+  .trade-team {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(19,74,142,0.55);
+    margin-bottom: 7px;
+    text-transform: uppercase;
+  }
+
+  .trade-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--slate);
+    color: var(--blue);
+    font-size: 13px;
+    opacity: 0.5;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+
+  .trade-assets { display: flex; flex-direction: column; gap: 5px; }
+
+  .trade-asset { display: flex; align-items: center; gap: 7px; line-height: 1.35; }
+
+  .player-asset { min-height: 32px; }
+
+  .player-headshot {
+    width: 32px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 15%;
+    background: var(--slate);
+    flex-shrink: 0;
+    border: 1.5px solid var(--border);
+  }
+
+  .player-info { display: flex; flex-direction: column; gap: 1px; }
+
+  .player-name { font-size: 13.5px; color: var(--body-text); }
+
+  .cash-asset { padding: 2px 0; }
+
+  .trade-asset .pos { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+  .trade-asset .cash { color: var(--blue); font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
+
+  /* FOOTER */
+  footer {
+    background: var(--blue-deep);
+    border-top: 3px solid var(--red);
+    padding: 28px 52px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(168,200,232,0.45);
+  }
+
+  footer span { color: rgba(168,200,232,0.7); }
+
+  @media (max-width: 700px) {
+    .header-inner {
+      padding: 36px 20px 28px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    .header-right { text-align: left; }
+    .header-title { font-size: clamp(52px, 14vw, 72px); }
+    main { padding: 40px 16px 60px; gap: 52px; }
+    .section-title { font-size: 26px; }
+    .trade-parties {
+      grid-template-columns: 1fr;
+    }
+    .trade-arrow {
+      padding: 8px;
+      border-left: none;
+      border-right: none;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      justify-content: flex-start;
+      padding-left: 16px;
+    }
+    .rule-item { grid-template-columns: 38px 1fr; }
+    .auction-table th, .auction-table td { padding: 12px 14px; }
+    footer { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-img"></div>
+  <div class="header-inner">
+    <div>
+      <span class="header-eyebrow">ESPN Fantasy Baseball &middot; Custom Rulebook</span>
+      <h1 class="header-title">MLB<em>Ballaholics</em></h1>
+    </div>
+    <div class="header-right">
+      <div class="sport-toggle">
+        <button class="sport-btn active" id="btn-baseball">⚾ Baseball</button>
+        <button class="sport-btn" id="btn-football" disabled title="Coming soon">🏈 Football</button>
+      </div>
+      <span class="header-date">Updated Mar 13, 2026</span>
+    </div>
+  </div>
+  <div class="header-stripe"></div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-item active" href="#keepers">Keepers</a>
+    <a class="nav-item" href="#rookies">Rookies</a>
+    <a class="nav-item" href="#auction">Auction $</a>
+    <a class="nav-item" href="#pitching">Pitching Limit</a>
+    <a class="nav-item" href="#playoffs">Playoffs</a>
+    <a class="nav-item" href="#dollars-table">2026 Dollars</a>
+    <a class="nav-item" href="#ledger">Trade Ledger</a>
+  </div>
+</nav>
+
+<main>
+
+  <section class="section" id="keepers">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Keeper Eligibility</h2>
+      <div class="section-divider"></div>
+    </div>
+    <ul class="rules-list">
+      <li class="rule-item">
+        <span class="rule-num">1.1</span>
+        <div class="rule-body">A player must have at least <strong>1 regular season at bat</strong> or <strong>1 inning pitched</strong> to qualify as keepable.</div>
+      </li>
+      <li class="rule-item">
+        <span class="rule-num">1.2</span>
+        <div class="rule-body">Keeper salaries are based on <strong>ESPN's preseason suggested auction values</strong> at the time of the keeper lock date.</div>
+      </li>
+      <li class="rule-item">
+        <span class="rule-num">1.3</span>
+        <div class="rule-body">Managers may keep <strong>up to five players</strong> on their roster for the following season, not including rookie keepers (see Section 02).</div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="rookies">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Rookie Keepers</h2>
+      <div class="section-divider"></div>
+    </div>
+    <ul class="rules-list">
+      <li class="rule-item">
+        <span class="rule-num">2.1</span>
+        <div class="rule-body">Managers may keep <strong>up to two rookies</strong> in addition to their five standard keepers.</div>
+      </li>
+      <li class="rule-item">
+        <span class="rule-num">2.2</span>
+        <div class="rule-body">A rookie is defined as a player who has played at least one MLB game and has not exceeded <strong>130 at bats</strong> or <strong>50 innings pitched</strong> in any single MLB season — exceeding either is disqualifying.</div>
+      </li>
+      <li class="rule-item">
+        <span class="rule-num">2.3</span>
+        <div class="rule-body">Rookie keepers are priced at <strong>50% of ESPN suggested auction value</strong>, rounded down to the nearest dollar.</div>
+      </li>
+      <li class="rule-item">
+        <span class="rule-num">2.4</span>
+        <div class="rule-body">A player who exceeds the rookie threshold during a season may still be kept at the <strong>50% rate the following season</strong>. After that, they must be kept at full value or released.</div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="auction">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Auction Dollar Trading</h2>
+      <div class="section-divider"></div>
+    </div>
+    <ul class="rules-list">
+      <li class="rule-item">
+        <span class="rule-num">3.1</span>
+        <div class="rule-body">Managers may trade auction dollars to one another. Transferred dollars take effect in the <strong>following preseason</strong>.</div>
+      </li>
+      <li class="rule-item">
+        <span class="rule-num">3.2</span>
+        <div class="rule-body">
+          If a manager's keeper salaries total less than the dollars owed to them through trades, the full amount cannot be reflected and <strong>no further adjustment can be made</strong>.
+          <div class="rule-note"><strong>How this works:</strong> ESPN caps all managers at $260 in auction dollars. To reflect traded dollars, the commissioner deducts the equivalent value from a manager's keepers — effectively increasing their spending power.</div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="pitching">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Starting Pitcher Limit</h2>
+      <div class="section-divider"></div>
+    </div>
+    <ul class="rules-list">
+      <li class="rule-item">
+        <span class="rule-num">4.1</span>
+        <div class="rule-body">No manager may exceed the <strong>league's weekly starting pitcher maximum</strong> in any matchup.</div>
+      </li>
+      <li class="rule-item">
+        <span class="rule-num">4.2</span>
+        <div class="rule-body">
+          Managers are responsible for monitoring their own starts — ESPN does not prevent exceeding the limit in real time.
+          <div class="rule-note"><strong>Why this rule exists:</strong> ESPN's limit check does not occur until after the day's games. With 7 starters already logged in an 8-start max matchup, ESPN will allow additional pitchers to start on the final day — potentially pushing the total past the maximum. This rule closes that loophole.</div>
+        </div>
+      </li>
+      <li class="rule-item">
+        <span class="rule-num">4.3</span>
+        <div class="rule-body">If the limit is exceeded, the pitcher with the <strong>latest start time will be moved out of the starting lineup first</strong>. If two or more pitchers share the same start time, the one with the <strong>lowest ESPN % rostered will be moved out</strong>.</div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="playoffs">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Playoffs</h2>
+      <div class="section-divider"></div>
+    </div>
+    <ul class="rules-list">
+      <li class="rule-item">
+        <span class="rule-num">5.1</span>
+        <div class="rule-body">The <strong>top six teams</strong> qualify for playoffs, consisting of <strong>three 2-week matchups</strong>. The top two seeds receive first-round byes.</div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="dollars-table">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">2026 Auction Dollar Table</h2>
+      <div class="section-divider"></div>
+    </div>
+    <div class="auction-table-wrap">
+      <table class="auction-table">
+        <thead><tr><th>Team</th><th>Auction $</th></tr></thead>
+        <tbody id="auction-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="ledger">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Trade Ledger</h2>
+      <div class="section-divider"></div>
+    </div>
+    <div id="trade-seasons"></div>
+  </section>
+
+</main>
+
+<footer>
+  <p>MLB Ballaholics &middot; League Rulebook &middot; <span>2026</span></p>
+</footer>
+
+<script>
+const auctionData = [
+  { team: "Durham Bulls", dollars: 296 },
+  { team: "Cook's Bay Honey Badgers", dollars: 242 },
+  { team: "Hanshin Tigers", dollars: 303 },
+  { team: "La Flama Blanca", dollars: 225 },
+  { team: "Big Wood Energy", dollars: 258 },
+  { team: "Vancouver Canadians", dollars: 245 },
+  { team: "Ricky Vaughn Wild Things", dollars: 214 },
+  { team: "Yankee Clippers", dollars: 313 },
+  { team: "Springfield Isotopes", dollars: 234 },
+  { team: "Booze Broads Ball n Bullshit", dollars: 270 },
+];
+
+const tbody = document.getElementById('auction-tbody');
+const tbodyRows = auctionData.map(row =>
+  `<tr><td>${esc(row.team)}</td><td class="dollars">$${row.dollars}</td></tr>`
+);
+tbody.innerHTML = tbodyRows.join('');
+
+const trades = [
+  { season: "2025", date: "Wed Mar 19", parties: [{ team: "Yankee Clippers", gives: ["Christian Yelich, Mil LF", "Josh Hader, Hou RP", "$7"] }, { team: "Ricky Vaughn Wild Things", gives: ["Xavier Edwards, Mia SS", "Paul Goldschmidt, NYY 1B"] }] },
+  { season: "2025", date: "Wed May 7", parties: [{ team: "Springfield Isotopes", gives: ["TJ Friedl, Cin CF", "$3"] }, { team: "Yankee Clippers", gives: ["Nolan Arenado, StL 3B"] }] },
+  { season: "2025", date: "Thu May 8", parties: [{ team: "Ricky Vaughn Wild Things", gives: ["Josh Hader, Hou RP", "$10"] }, { team: "Durham Bulls", gives: ["Ketel Marte, Ari 2B"] }] },
+  { season: "2025", date: "Sat Jun 7", parties: [{ team: "Yankee Clippers", gives: ["Matt Olson, Atl 1B"] }, { team: "Cook's Bay Honey Badgers", gives: ["Jake Burger, Tex 1B", "$20"] }] },
+  { season: "2025", date: "Sat Jun 7", parties: [{ team: "Yankee Clippers", gives: ["Jacob deGrom, Tex SP", "Nico Hoerner, ChC 2B", "Max Fried, NYY SP"] }, { team: "Durham Bulls", gives: ["Bailey Falter, Pit SP", "Randy Arozarena, Sea LF", "Walker Buehler, Bos SP", "$10"] }] },
+  { season: "2025", date: "Mon Jun 23", parties: [{ team: "La Flama Blanca", gives: ["Vinnie Pasquantino, KC 1B", "J.T. Realmuto, Phi C", "$20"] }, { team: "Durham Bulls", gives: ["Max Fried, NYY SP", "Eugenio Suarez, Ari 3B"] }] },
+  { season: "2025", date: "Mon Jun 23", parties: [{ team: "Booze Broads Ball n Bullshit", gives: ["Raisel Iglesias, Atl RP", "$10"] }, { team: "Durham Bulls", gives: ["Josh Hader, Hou RP"] }] },
+  { season: "2025", date: "Thu Jun 26", parties: [{ team: "Yankee Clippers", gives: ["Evan Carter, Tex LF", "Logan Gilbert, Sea SP"] }, { team: "Vancouver Canadians", gives: ["Jose Soriano, LAA SP", "Jung Hoo Lee, SF CF", "$15"] }] },
+  { season: "2025", date: "Sat Jun 28", parties: [{ team: "Yankee Clippers", gives: ["George Kirby, Sea SP"] }, { team: "Ricky Vaughn Wild Things", gives: ["Paul Goldschmidt, NYY 1B", "$3"] }] },
+  { season: "2025", date: "Mon Jul 7", parties: [{ team: "Springfield Isotopes", gives: ["DJ LeMahieu, NYY 1B", "$20"] }, { team: "Durham Bulls", gives: ["Mookie Betts, LAD SS"] }] },
+  { season: "2025", date: "Mon Jul 14", parties: [{ team: "Hanshin Tigers", gives: ["Jordan Westburg, Bal 3B"] }, { team: "Cook's Bay Honey Badgers", gives: ["Tony Santillan, Cin RP", "$5"] }] },
+  { season: "2025", date: "Sat Jul 19", parties: [{ team: "Ricky Vaughn Wild Things", gives: ["Julio Rodriguez, Sea CF", "$30"] }, { team: "Hanshin Tigers", gives: ["Andres Munoz, Sea RP", "Kyle Tucker, ChC RF"] }] },
+  { season: "2025", date: "Sat Jul 19", parties: [{ team: "Ricky Vaughn Wild Things", gives: ["Spencer Torkelson, Det 1B", "$8"] }, { team: "Hanshin Tigers", gives: ["Josh Naylor, Ari 1B"] }] },
+  { season: "2025", date: "Mon Jul 21", parties: [{ team: "La Flama Blanca", gives: ["$15"] }, { team: "Durham Bulls", gives: ["Blake Snell, LAD SP"] }] },
+  { season: "2025", date: "Mon Jul 21", parties: [{ team: "Ricky Vaughn Wild Things", gives: ["Grant Holmes, Atl RP", "$5"] }, { team: "Macon Bacon", gives: ["Robert Suarez, SD RP"] }] },
+  { season: "2026off", date: "Sun Feb 1", parties: [{ team: "Springfield Isotopes", gives: ["Mookie Betts, LAD SS", "$5"] }, { team: "Ricky Vaughn Wild Things", gives: ["Rafael Devers, SF DH"] }] },
+  { season: "2026off", date: "Thu Feb 5", parties: [{ team: "Yankee Clippers", gives: ["Ben Rice, NYY 1B", "Jackson Merrill, SD CF"] }, { team: "Ethan's Excellent Team", gives: ["$5"] }] },
+  { season: "2026off", date: "Thu Feb 5", parties: [{ team: "Booze Broads Ball n Bullshit", gives: ["Pete Alonso, BAL 1B", "Isaac Collins, KC LF"] }, { team: "Durham Bulls", gives: ["$15"] }] },
+  { season: "2026off", date: "Thu Feb 5", parties: [{ team: "Cook's Bay Honey Badgers", gives: ["Tarik Skubal, DET SP"] }, { team: "Durham Bulls", gives: ["$7"] }] },
+  { season: "2026off", date: "Wed Feb 11", parties: [{ team: "Yankee Clippers", gives: ["Samuel Basallo, BAL C"] }, { team: "Ricky Vaughn Wild Things", gives: ["Robert Suarez, ATL RP", "$2"] }] },
+  { season: "2026off", date: "Wed Feb 11", parties: [{ team: "Yankee Clippers", gives: ["Nolan McLean, NYM SP"] }, { team: "Cook's Bay Honey Badgers", gives: ["$2"] }] },
+  { season: "2026off", date: "Mon Feb 23", parties: [{ team: "Big Wood Energy", gives: ["$2"] }, { team: "Cook's Bay Honey Badgers", gives: ["James Wood, WSH LF"] }] },
+  { season: "2026off", date: "Fri Mar 13", parties: [{ team: "Big Wood Energy", gives: ["Cam Schlittler, NYY SP"] }, { team: "Durham Bulls", gives: ["$7"] }] },
+  { season: "2026off", date: "Fri Mar 13", parties: [{ team: "Springfield Isotopes", gives: ["Jacob Wilson, ATH SS"] }, { team: "Big Wood Energy", gives: ["$7"] }] },
+  { season: "2026off", date: "Fri Mar 13", parties: [{ team: "Booze Broads Ball n Bullshit", gives: ["Maikel Garcia, KC 3B"] }, { team: "Springfield Isotopes", gives: ["Giancarlo Stanton, NYY DH", "$5"] }] },
+];
+
+const PLAYER_IDS = {
+  "Christian Yelich":   592885, "Josh Hader":        623352, "Xavier Edwards":    669364,
+  "Paul Goldschmidt":   502671, "TJ Friedl":         670770, "Nolan Arenado":     571448,
+  "Ketel Marte":        606466, "Matt Olson":         621566, "Jake Burger":       669394,
+  "Nico Hoerner":       663538, "Max Fried":          608331, "Jacob deGrom":      594798,
+  "Bailey Falter":      663559, "Randy Arozarena":    668227, "Walker Buehler":    621111,
+  "Vinnie Pasquantino": 686469, "J.T. Realmuto":      592663, "Eugenio Suarez":    553993,
+  "Raisel Iglesias":    628452, "Evan Carter":        694497, "Logan Gilbert":     669302,
+  "Jose Soriano":       667755, "Jung Hoo Lee":       808982, "George Kirby":      669923,
+  "Mookie Betts":       605141, "DJ LeMahieu":        518934, "Jordan Westburg":   676059,
+  "Tony Santillan":     663574, "Julio Rodriguez":    677594, "Andres Munoz":      662253,
+  "Kyle Tucker":        663656, "Spencer Torkelson":  679529, "Josh Naylor":       647304,
+  "Blake Snell":        605483, "Grant Holmes":       656550, "Robert Suarez":     663158,
+  "Rafael Devers":      646240, "Ben Rice":           700250, "Jackson Merrill":   701538,
+  "Pete Alonso":        624413, "Isaac Collins":      686555, "Tarik Skubal":      669373,
+  "Samuel Basallo":     694212, "Nolan McLean":       690997, "James Wood":        695578,
+  "Cam Schlittler":     693645,
+  "Jacob Wilson":       805779,
+  "Maikel Garcia":      672580,
+  "Giancarlo Stanton":  519317,
+};
+
+function esc(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function headshot(name) {
+  const id = PLAYER_IDS[name];
+  if (!id) return '';
+  return `<img class="player-headshot" src="https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_120,q_auto:best/v1/people/${id}/headshot/67/current" alt="${esc(name)}" onerror="this.style.display='none'">`;
+}
+
+function formatAsset(a) {
+  if (a.startsWith('$')) return `<span class="trade-asset cash-asset"><span class="cash">${esc(a)}</span></span>`;
+  const parts = a.split(', ');
+  const name = parts[0];
+  const pos = parts.slice(1).join(', ');
+  const img = headshot(name);
+  return `<span class="trade-asset player-asset">${img}<span class="player-info"><span class="player-name">${esc(name)}</span>${pos ? `<span class="pos">${esc(pos)}</span>` : ''}</span></span>`;
+}
+
+const seasons = {
+  "2025 Season":    trades.filter(t => t.season === "2025"),
+  "2026 Preseason": trades.filter(t => t.season === "2026off"),
+};
+
+const seasonsEl = document.getElementById('trade-seasons');
+const seasonBlocks = [];
+const seasonKeys = Object.keys(seasons);
+const lastIdx = seasonKeys.length - 1;
+seasonKeys.forEach((label, idx) => {
+  const seasonTrades = seasons[label];
+  if (!seasonTrades.length) return;
+  const tradesHtml = seasonTrades.map(trade => {
+    const [t1, t2] = trade.parties;
+    return `
+      <div class="trade-group">
+        <div class="trade-date">${esc(trade.date)}</div>
+        <div class="trade-card">
+          <div class="trade-parties">
+            <div class="trade-side"><div class="trade-team">${esc(t1.team)}</div><div class="trade-assets">${t1.gives.map(formatAsset).join('')}</div></div>
+            <div class="trade-arrow">⇄</div>
+            <div class="trade-side"><div class="trade-team">${esc(t2.team)}</div><div class="trade-assets">${t2.gives.map(formatAsset).join('')}</div></div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  const isOpen = idx === lastIdx;
+  seasonBlocks.push(`
+    <div class="season-block ${isOpen ? 'open' : ''}">
+      <button class="season-toggle" aria-expanded="${isOpen}">
+        <div class="season-toggle-left">
+          <span class="season-label">${esc(label)}</span>
+          <span class="season-count">${seasonTrades.length} trade${seasonTrades.length !== 1 ? 's' : ''}</span>
+        </div>
+        <span class="season-chevron">▼</span>
+      </button>
+      <div class="season-body"><div class="trade-timeline">${tradesHtml}</div></div>
+    </div>`);
+});
+seasonsEl.innerHTML = seasonBlocks.join('');
+
+// Season block toggle — delegated, no inline handlers
+document.getElementById('trade-seasons').addEventListener('click', e => {
+  const btn = e.target.closest('.season-toggle');
+  if (!btn) return;
+  const block = btn.closest('.season-block');
+  const isOpen = block.classList.toggle('open');
+  btn.setAttribute('aria-expanded', isOpen);
+});
+
+// Sport toggle — baseball active, football placeholder (wire up content here when ready)
+document.getElementById('btn-baseball').addEventListener('click', () => {
+  document.getElementById('btn-baseball').classList.add('active');
+  document.getElementById('btn-football').classList.remove('active');
+});
+
+// Nav click — smooth scroll with sticky nav offset accounted for
+document.querySelectorAll('.nav-item').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+// Sync scroll-margin-top with actual nav height — update on resize too
+const nav = document.querySelector('nav');
+const sections = document.querySelectorAll('.section');
+let observer;
+
+function buildObserver(navHeight) {
+  if (observer) observer.disconnect();
+  observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.getAttribute('href') === `#${id}`));
+      }
+    });
+  }, { rootMargin: `-${navHeight}px 0px -60% 0px`, threshold: 0 });
+  sections.forEach(s => observer.observe(s));
+}
+
+function updateNavOffset() {
+  const navHeight = nav.offsetHeight;
+  sections.forEach(s => s.style.scrollMarginTop = navHeight + 'px');
+  buildObserver(navHeight);
+}
+
+updateNavOffset();
+new ResizeObserver(updateNavOffset).observe(nav);
+</script>
+</body>
+</html>

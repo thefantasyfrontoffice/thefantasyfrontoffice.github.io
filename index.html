@@ -3,25 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MLB Ballaholics — League Rulebook</title>
-<meta name="description" content="Official custom rules, auction dollar table, and trade ledger for the MLB Ballaholics ESPN fantasy baseball league.">
+<title>The Front Office</title>
+<meta name="description" content="The Front Office — official rules, auction dollar table, and trade ledger for the Ballaholics and Sunday's are for the Boys fantasy leagues.">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --blue:        #134A8E;
-    --blue-dark:   #0d3568;
-    --blue-deep:   #081e3f;
-    --red:         #E8291C;
-    --powder:      #a8c8e8;
-    --powder-lt:   #d4e8f5;
-    --white:       #ffffff;
-    --off-white:   #f4f7fb;
-    --slate:       #e8eef6;
-    --ink:         #0a1628;
-    --body-text:   #2a3d57;
-    --muted:       #5a7499;
-    --border:      rgba(19,74,142,0.15);
-    --border-faint:rgba(19,74,142,0.08);
+  /* Shared */
+  :root { --white: #ffffff; }
+
+  /* Baseball — Toronto Blue Jays */
+  body[data-sport="baseball"] {
+    --primary:           #134A8E;
+    --primary-dark:      #0d3568;
+    --primary-deep:      #081e3f;
+    --accent:            #E8291C;
+    --highlight:         #a8c8e8;
+    --highlight-lt:      #d4e8f5;
+    --off-white:         #f4f7fb;
+    --slate:             #e8eef6;
+    --ink:               #0a1628;
+    --body-text:         #2a3d57;
+    --muted:             #5a7499;
+    --border:            rgba(19,74,142,0.15);
+    --border-faint:      rgba(19,74,142,0.08);
+    --stripe-left:       #1a5aa8;
+    --primary-a12:       rgba(19,74,142,0.12);
+    --primary-a40:       rgba(19,74,142,0.40);
+    --primary-a55:       rgba(19,74,142,0.55);
+    --primary-a85:       rgba(19,74,142,0.85);
+    --highlight-a45:     rgba(168,200,232,0.45);
+    --highlight-a55:     rgba(168,200,232,0.55);
+    --highlight-a65:     rgba(168,200,232,0.65);
+    --highlight-a70:     rgba(168,200,232,0.70);
+    --highlight-a80:     rgba(168,200,232,0.80);
+    --shadow-dark:       rgba(8,30,63,0.18);
+    --shadow-mid:        rgba(8,30,63,0.06);
+    --shadow-faint:      rgba(8,30,63,0.05);
+  }
+
+  /* Football — San Francisco 49ers */
+  body[data-sport="football"] {
+    --primary:           #AA0000;
+    --primary-dark:      #880000;
+    --primary-deep:      #2a0a00;
+    --accent:            #B3995D;
+    --highlight:         #e8d5a8;
+    --highlight-lt:      #f5ecd4;
+    --off-white:         #fdf9f4;
+    --slate:             #f0e8d8;
+    --ink:               #1a0a00;
+    --body-text:         #3d2a10;
+    --muted:             #8a6a3a;
+    --border:            rgba(170,0,0,0.15);
+    --border-faint:      rgba(170,0,0,0.08);
+    --stripe-left:       #AA0000;
+    --primary-a12:       rgba(170,0,0,0.12);
+    --primary-a40:       rgba(170,0,0,0.40);
+    --primary-a55:       rgba(170,0,0,0.55);
+    --primary-a85:       rgba(170,0,0,0.85);
+    --highlight-a45:     rgba(232,213,168,0.45);
+    --highlight-a55:     rgba(232,213,168,0.55);
+    --highlight-a65:     rgba(232,213,168,0.65);
+    --highlight-a70:     rgba(232,213,168,0.70);
+    --highlight-a80:     rgba(232,213,168,0.80);
+    --shadow-dark:       rgba(42,10,0,0.18);
+    --shadow-mid:        rgba(42,10,0,0.06);
+    --shadow-faint:      rgba(42,10,0,0.05);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,22 +78,24 @@
     color: var(--ink);
     font-family: 'Barlow', sans-serif;
     overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
   }
 
   /* HEADER */
   header {
-    background: var(--blue-deep);
+    background: var(--primary-deep);
     position: relative;
     overflow: hidden;
+    transition: background 0.4s ease;
   }
 
   .header-img {
     position: absolute;
     inset: 0;
-    background-image: url('https://images.unsplash.com/photo-1564890350535-7bf6594aa2d5?q=80&w=1600&auto=format&fit=crop');
     background-size: cover;
     background-position: center 40%;
     opacity: 0.28;
+    transition: opacity 0.2s ease;
   }
 
   /* Subtle diagonal stripe texture — like pinstripes on the road jersey */
@@ -71,7 +119,7 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 4px;
-    background: var(--red);
+    background: var(--accent);
   }
 
   .header-inner {
@@ -91,7 +139,7 @@
     font-size: 10px;
     letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: rgba(168,200,232,0.8);
+    color: var(--highlight-a80);
     margin-bottom: 12px;
     display: block;
   }
@@ -104,11 +152,19 @@
     color: var(--white);
   }
 
+  .header-title-top {
+    display: block;
+    font-size: 0.38em;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 2px;
+  }
+
   .header-title em {
     display: block;
     font-style: normal;
-    /* Powder blue — the classic Blue Jays alternate colour */
-    color: var(--powder);
+    color: var(--highlight);
+    transition: color 0.4s ease;
   }
 
   .header-right {
@@ -141,7 +197,7 @@
   }
 
   .sport-btn.active {
-    background: var(--red);
+    background: var(--accent);
     color: var(--white);
   }
 
@@ -160,14 +216,14 @@
     font-family: 'DM Mono', monospace;
     font-size: 10px;
     letter-spacing: 0.1em;
-    color: rgba(168,200,232,0.55);
+    color: var(--highlight-a55);
     margin-top: 10px;
   }
 
   /* Bottom border: blue-to-red split stripe like the Jays' pants piping */
   .header-stripe {
     height: 5px;
-    background: linear-gradient(90deg, #1a5aa8 0%, #1a5aa8 60%, var(--red) 60%, var(--red) 100%);
+    background: linear-gradient(90deg, var(--stripe-left) 0%, var(--stripe-left) 60%, var(--accent) 60%, var(--accent) 100%);
     position: relative;
     z-index: 1;
   }
@@ -177,11 +233,11 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: var(--blue);
+    background: var(--primary);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    box-shadow: 0 2px 12px rgba(8,30,63,0.18);
+    box-shadow: 0 2px 12px var(--shadow-dark);
   }
 
   nav::-webkit-scrollbar { display: none; }
@@ -192,6 +248,14 @@
     display: flex;
     padding: 0 16px;
     min-width: max-content;
+  }
+
+  .nav-sport-items {
+    display: flex;
+  }
+
+  .nav-sport-items[hidden] {
+    display: none;
   }
 
   .nav-item {
@@ -210,7 +274,7 @@
   }
 
   .nav-item:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.06); }
-  .nav-item.active { color: var(--white); border-bottom-color: var(--red); }
+  .nav-item.active { color: var(--white); border-bottom-color: var(--accent); }
 
   /* scroll-margin-top set dynamically in JS to match actual nav height */
 
@@ -236,7 +300,7 @@
     font-family: 'Bebas Neue', sans-serif;
     font-size: 12px;
     letter-spacing: 0.1em;
-    background: var(--red);
+    background: var(--accent);
     color: var(--white);
     padding: 4px 10px 3px;
     flex-shrink: 0;
@@ -247,14 +311,14 @@
     font-family: 'Bebas Neue', sans-serif;
     font-size: 34px;
     letter-spacing: 0.05em;
-    color: var(--blue-deep);
+    color: var(--primary-deep);
     line-height: 1;
   }
 
   .section-divider {
     flex: 1;
     height: 2px;
-    background: rgba(19,74,142,0.12);
+    background: var(--primary-a12);
   }
 
   /* RULES */
@@ -272,7 +336,7 @@
   .rule-num {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
-    color: rgba(19,74,142,0.85);
+    color: var(--primary-a85);
     padding-top: 2px;
     letter-spacing: 0.04em;
     font-weight: 500;
@@ -285,15 +349,15 @@
   }
 
   .rule-body strong {
-    color: var(--blue-deep);
+    color: var(--primary-deep);
     font-weight: 600;
   }
 
   .rule-note {
     margin-top: 12px;
     padding: 13px 16px;
-    border-left: 3px solid var(--blue);
-    background: rgba(19,74,142,0.05);
+    border-left: 3px solid var(--primary);
+    background: var(--border-faint);
     font-size: 13.5px;
     line-height: 1.65;
     color: var(--muted);
@@ -301,7 +365,7 @@
   }
 
   .rule-note strong {
-    color: var(--blue);
+    color: var(--primary);
     font-weight: 600;
   }
 
@@ -310,7 +374,7 @@
     border: 1px solid var(--border);
     border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 1px 4px rgba(8,30,63,0.06);
+    box-shadow: 0 1px 4px var(--shadow-mid);
   }
 
   .auction-table {
@@ -319,7 +383,7 @@
   }
 
   .auction-table thead {
-    background: var(--blue-deep);
+    background: var(--primary-deep);
   }
 
   .auction-table th {
@@ -327,7 +391,7 @@
     font-size: 10px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: rgba(212,232,245,0.85); /* --powder-lt at 85% */
+    color: var(--highlight-a80); /* header row — adapts to theme */
     padding: 14px 24px;
     text-align: left;
     font-weight: 400;
@@ -344,12 +408,12 @@
   .auction-table tbody tr:nth-child(even) td { background: var(--off-white); }
   .auction-table tbody tr:last-child td { border-bottom: none; }
   .auction-table tbody tr:hover td,
-  .auction-table tbody tr:nth-child(even):hover td { background: var(--powder-lt); color: var(--blue-deep); }
+  .auction-table tbody tr:nth-child(even):hover td { background: var(--highlight-lt); color: var(--primary-deep); }
 
   .auction-table .dollars {
     font-family: 'DM Mono', monospace;
     font-size: 15px;
-    color: var(--blue);
+    color: var(--primary);
     font-weight: 500;
   }
 
@@ -359,12 +423,12 @@
     border: 1px solid var(--border);
     border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 1px 4px rgba(8,30,63,0.05);
+    box-shadow: 0 1px 4px var(--shadow-faint);
   }
 
   .season-toggle {
     width: 100%;
-    background: var(--blue-deep);
+    background: var(--primary-deep);
     border: none;
     cursor: pointer;
     display: flex;
@@ -374,7 +438,7 @@
     transition: background 0.2s;
   }
 
-  .season-toggle:hover { background: var(--blue-dark); }
+  .season-toggle:hover { background: var(--primary-dark); }
 
   .season-toggle-left { display: flex; align-items: center; gap: 14px; }
 
@@ -388,12 +452,12 @@
   .season-count {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
-    color: rgba(168,200,232,0.65);
+    color: var(--highlight-a65);
     letter-spacing: 0.1em;
   }
 
   .season-chevron {
-    color: rgba(168,200,232,0.55);
+    color: var(--highlight-a55);
     font-size: 11px;
     transition: transform 0.25s ease;
   }
@@ -438,14 +502,14 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: rgba(19,74,142,0.4);
+    background: var(--primary-a40);
   }
 
   .trade-date {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
     letter-spacing: 0.14em;
-    color: rgba(19,74,142,0.55);
+    color: var(--primary-a55);
     margin-bottom: 7px;
     text-transform: uppercase;
   }
@@ -454,7 +518,7 @@
     border: 1px solid var(--border);
     border-radius: 3px;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(8,30,63,0.05);
+    box-shadow: 0 1px 3px var(--shadow-faint);
   }
 
   .trade-parties {
@@ -470,7 +534,7 @@
     font-family: 'DM Mono', monospace;
     font-size: 10px;
     letter-spacing: 0.1em;
-    color: rgba(19,74,142,0.55);
+    color: var(--primary-a55);
     margin-bottom: 7px;
     text-transform: uppercase;
   }
@@ -480,7 +544,7 @@
     align-items: center;
     justify-content: center;
     background: var(--slate);
-    color: var(--blue);
+    color: var(--primary);
     font-size: 13px;
     opacity: 0.5;
     border-left: 1px solid var(--border);
@@ -511,22 +575,22 @@
   .cash-asset { padding: 2px 0; }
 
   .trade-asset .pos { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
-  .trade-asset .cash { color: var(--blue); font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
+  .trade-asset .cash { color: var(--primary); font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
 
   /* FOOTER */
   footer {
-    background: var(--blue-deep);
-    border-top: 3px solid var(--red);
+    background: var(--primary-deep);
+    border-top: 3px solid var(--accent);
     padding: 28px 52px;
     text-align: center;
     font-family: 'DM Mono', monospace;
     font-size: 10px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgba(168,200,232,0.45);
+    color: var(--highlight-a45);
   }
 
-  footer span { color: rgba(168,200,232,0.7); }
+  footer span { color: var(--highlight-a70); }
 
   @media (max-width: 700px) {
     .header-inner {
@@ -557,21 +621,21 @@
   }
 </style>
 </head>
-<body>
+<body data-sport="baseball">
 
 <header>
   <div class="header-img"></div>
   <div class="header-inner">
     <div>
-      <span class="header-eyebrow">ESPN Fantasy Baseball &middot; Custom Rulebook</span>
-      <h1 class="header-title">MLB<em>Ballaholics</em></h1>
+      <span class="header-eyebrow">The Front Office &middot; Fantasy League Rules</span>
+      <h1 class="header-title"><span class="header-title-top">MLB</span><em class="header-title-em">Ballaholics</em></h1>
     </div>
     <div class="header-right">
       <div class="sport-toggle">
         <button class="sport-btn active" id="btn-baseball">⚾ Baseball</button>
-        <button class="sport-btn" id="btn-football" disabled title="Coming soon">🏈 Football</button>
+        <button class="sport-btn" id="btn-football">🏈 Football</button>
       </div>
-      <span class="header-date">Updated Mar 13, 2026</span>
+      <span class="header-date" id="header-date"></span>
     </div>
   </div>
   <div class="header-stripe"></div>
@@ -579,18 +643,26 @@
 
 <nav>
   <div class="nav-inner">
-    <a class="nav-item active" href="#keepers">Keepers</a>
-    <a class="nav-item" href="#rookies">Rookies</a>
-    <a class="nav-item" href="#auction">Auction $</a>
-    <a class="nav-item" href="#pitching">Pitching Limit</a>
-    <a class="nav-item" href="#playoffs">Playoffs</a>
-    <a class="nav-item" href="#dollars-table">2026 Dollars</a>
-    <a class="nav-item" href="#ledger">Trade Ledger</a>
+    <div class="nav-sport-items" id="nav-baseball">
+      <a class="nav-item active" href="#keepers">Keepers</a>
+      <a class="nav-item" href="#rookies">Rookies</a>
+      <a class="nav-item" href="#auction">Auction $</a>
+      <a class="nav-item" href="#pitching">Pitching Limit</a>
+      <a class="nav-item" href="#playoffs">Playoffs</a>
+      <a class="nav-item" href="#dollars-table">2026 Dollars</a>
+      <a class="nav-item" href="#ledger">Trade Ledger</a>
+    </div>
+    <div class="nav-sport-items" id="nav-football" hidden>
+      <a class="nav-item" href="#fb-rules">Rules</a>
+      <a class="nav-item" href="#fb-draft-lottery">Draft Lottery</a>
+      <a class="nav-item" href="#fb-ledger">Trade Ledger</a>
+    </div>
   </div>
 </nav>
 
 <main>
 
+<div class="baseball-content">
   <section class="section" id="keepers">
     <div class="section-header">
       <span class="section-num">01</span>
@@ -722,10 +794,58 @@
     <div id="trade-seasons"></div>
   </section>
 
+</div><!-- /.baseball-content -->
+
+<div class="football-content" hidden>
+
+  <section class="section" id="fb-rules">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Rules</h2>
+      <div class="section-divider"></div>
+    </div>
+    <ul class="rules-list">
+      <li class="rule-item">
+        <span class="rule-num">—</span>
+        <div class="rule-body">Sundays are for the Boys league rules will be added here.</div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="fb-draft-lottery">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Draft Lottery</h2>
+      <div class="section-divider"></div>
+    </div>
+    <ul class="rules-list">
+      <li class="rule-item">
+        <span class="rule-num">—</span>
+        <div class="rule-body">Draft pick seeding via dice-based lottery. Odds weighted by postseason results. Details coming soon.</div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="fb-ledger">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Trade Ledger</h2>
+      <div class="section-divider"></div>
+    </div>
+    <ul class="rules-list">
+      <li class="rule-item">
+        <span class="rule-num">—</span>
+        <div class="rule-body">Trade history will be added here.</div>
+      </li>
+    </ul>
+  </section>
+
+</div><!-- /.football-content -->
+
 </main>
 
 <footer>
-  <p>MLB Ballaholics &middot; League Rulebook &middot; <span>2026</span></p>
+  <p>The Front Office &middot; Fantasy League Rules &middot; <span>2026</span></p>
 </footer>
 
 <script>
@@ -867,12 +987,6 @@ document.getElementById('trade-seasons').addEventListener('click', e => {
   btn.setAttribute('aria-expanded', isOpen);
 });
 
-// Sport toggle — baseball active, football placeholder (wire up content here when ready)
-document.getElementById('btn-baseball').addEventListener('click', () => {
-  document.getElementById('btn-baseball').classList.add('active');
-  document.getElementById('btn-football').classList.remove('active');
-});
-
 // Nav click — smooth scroll with sticky nav offset accounted for
 document.querySelectorAll('.nav-item').forEach(link => {
   link.addEventListener('click', e => {
@@ -886,7 +1000,7 @@ document.querySelectorAll('.nav-item').forEach(link => {
 
 // Sync scroll-margin-top with actual nav height — update on resize too
 const nav = document.querySelector('nav');
-const sections = document.querySelectorAll('.section');
+let sections = document.querySelectorAll('.section');
 let observer;
 
 function buildObserver(navHeight) {
@@ -904,12 +1018,87 @@ function buildObserver(navHeight) {
 
 function updateNavOffset() {
   const navHeight = nav.offsetHeight;
+  // Re-query so observer only watches currently visible sections
+  sections = document.querySelectorAll('.baseball-content:not([hidden]) .section, .football-content:not([hidden]) .section');
   sections.forEach(s => s.style.scrollMarginTop = navHeight + 'px');
   buildObserver(navHeight);
 }
 
 updateNavOffset();
 new ResizeObserver(updateNavOffset).observe(nav);
+
+// Sport config
+const SPORTS = {
+  baseball: {
+    img:     'https://images.unsplash.com/photo-1564890350535-7bf6594aa2d5?q=80&w=1600&auto=format&fit=crop',
+    imgPos:  'center 40%',
+    titleTop: 'MLB',
+    titleEm:  'Ballaholics',
+  },
+  football: {
+    img:     'https://images.unsplash.com/photo-1588917917061-565469424de9?q=80&w=1600&auto=format&fit=crop',
+    imgPos:  'center 30%',
+    titleTop: 'SUNDAYS ARE FOR',
+    titleEm:  'THE BOYS',
+  },
+};
+
+function setSport(sport) {
+  const cfg = SPORTS[sport];
+  document.body.dataset.sport = sport;
+
+  // Header image
+  const headerImg = document.querySelector('.header-img');
+  headerImg.style.backgroundImage = `url('${cfg.img}')`;
+  headerImg.style.backgroundPosition = cfg.imgPos;
+
+  // Header title
+  document.querySelector('.header-title-top').textContent = cfg.titleTop;
+  document.querySelector('.header-title-em').textContent = cfg.titleEm;
+
+  // Toggle buttons
+  document.getElementById('btn-baseball').classList.toggle('active', sport === 'baseball');
+  document.getElementById('btn-football').classList.toggle('active', sport === 'football');
+
+  // Show/hide content sections
+  document.querySelectorAll('.baseball-content, .football-content').forEach(el => {
+    el.hidden = !el.classList.contains(`${sport}-content`);
+  });
+
+  // Swap nav groups
+  document.getElementById('nav-baseball').hidden = (sport !== 'baseball');
+  document.getElementById('nav-football').hidden = (sport !== 'football');
+
+  // Activate first nav item in the visible group
+  const activeNav = document.querySelector(`#nav-${sport} .nav-item`);
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (activeNav) activeNav.classList.add('active');
+
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Rebuild observer for newly visible sections
+  updateNavOffset();
+
+  localStorage.setItem('sport', sport);
+}
+
+// Sport toggle buttons
+document.getElementById('btn-baseball').addEventListener('click', () => setSport('baseball'));
+document.getElementById('btn-football').addEventListener('click', () => setSport('football'));
+
+// Init — restore last sport or default to baseball
+setSport(localStorage.getItem('sport') || 'baseball');
+
+
+
+// Auto date from file last-modified
+(function() {
+  const d = new Date(document.lastModified);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const str = `Updated ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  document.getElementById('header-date').textContent = str;
+})();
 </script>
 </body>
 </html>

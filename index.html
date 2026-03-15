@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Front Office</title>
-<meta name="description" content="The Front Office — official rules, auction dollar table, and trade ledger for the Ballaholics and Sunday's are for the Boys fantasy leagues.">
+<meta name="theme-color" content="#081e3f">
+<meta name="description" content="The Front Office — official rules, auction dollar table, and trade ledger for the Ballaholics and Sundays are for the Boys fantasy leagues.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   /* Shared */
@@ -71,8 +74,6 @@
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
   body {
     background: var(--off-white);
     color: var(--ink);
@@ -95,7 +96,6 @@
     background-size: cover;
     background-position: center 40%;
     opacity: 0.28;
-    transition: opacity 0.2s ease;
   }
 
   /* Subtle diagonal stripe texture — like pinstripes on the road jersey */
@@ -160,9 +160,8 @@
     margin-bottom: 2px;
   }
 
-  .header-title em {
+  .header-title-em {
     display: block;
-    font-style: normal;
     color: var(--highlight);
     transition: color 0.4s ease;
   }
@@ -224,8 +223,6 @@
   .header-stripe {
     height: 5px;
     background: linear-gradient(90deg, var(--stripe-left) 0%, var(--stripe-left) 60%, var(--accent) 60%, var(--accent) 100%);
-    position: relative;
-    z-index: 1;
   }
 
   /* NAV */
@@ -235,9 +232,9 @@
     z-index: 100;
     background: var(--primary);
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     box-shadow: 0 2px 12px var(--shadow-dark);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
   }
 
   nav::-webkit-scrollbar { display: none; }
@@ -282,7 +279,7 @@
   main {
     max-width: 1040px;
     margin: 0 auto;
-    padding: 72px 52px 96px;
+    padding: 48px 52px 96px;
     display: flex;
     flex-direction: column;
     gap: 72px;
@@ -292,17 +289,18 @@
   .section-header {
     display: flex;
     align-items: center;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
     gap: 16px;
+    padding-top: 12px;
   }
 
   .section-num {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     letter-spacing: 0.1em;
     background: var(--accent);
     color: var(--white);
-    padding: 4px 10px 3px;
+    padding: 4px 12px 3px;
     flex-shrink: 0;
     line-height: 1;
   }
@@ -322,16 +320,14 @@
   }
 
   /* RULES */
-  .rules-list { list-style: none; }
+  .rules-list { list-style: none; padding-bottom: 8px; }
 
   .rule-item {
     display: grid;
     grid-template-columns: 44px 1fr;
-    padding: 18px 0;
+    padding: 13px 0;
     border-bottom: 1px solid var(--border-faint);
   }
-
-  .rule-item:first-child { border-top: 1px solid var(--border-faint); }
 
   .rule-num {
     font-family: 'DM Mono', monospace;
@@ -357,7 +353,7 @@
     margin-top: 12px;
     padding: 13px 16px;
     border-left: 3px solid var(--primary);
-    background: var(--border-faint);
+    background: var(--primary-a12);
     font-size: 13.5px;
     line-height: 1.65;
     color: var(--muted);
@@ -572,10 +568,107 @@
 
   .player-name { font-size: 13.5px; color: var(--body-text); }
 
-  .cash-asset { padding: 2px 0; }
+  .cash-asset, .pick-asset, .dropped-asset { padding: 2px 0; }
 
   .trade-asset .pos { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
-  .trade-asset .cash { color: var(--primary); font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 3px 9px;
+    border-radius: 20px;
+    line-height: 1.4;
+  }
+
+  .badge-cash {
+    background: var(--primary-a12);
+    color: var(--primary);
+    border: 1px solid var(--border);
+  }
+
+  .badge-pick {
+    background: rgba(179,153,93,0.15);
+    color: #7a5510;
+    border: 1px solid rgba(179,153,93,0.4);
+  }
+
+  .badge-dropped {
+    background: rgba(180,40,40,0.08);
+    color: #a02020;
+    border: 1px solid rgba(180,40,40,0.2);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  /* PICK ORDER TABLE */
+  .pick-order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+    font-size: 13.5px;
+  }
+
+  .pick-order-table td {
+    padding: 7px 10px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border-faint);
+    color: var(--body-text);
+    line-height: 1.5;
+  }
+
+  .pick-order-table tr:last-child td { border-bottom: none; }
+
+  .pick-order-table .pick-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--primary-a85);
+    white-space: nowrap;
+    width: 68px;
+    padding-right: 14px;
+  }
+
+  .pick-order-table .pick-sep {
+    width: 4px;
+    padding: 0;
+    color: var(--primary-a40);
+    font-size: 11px;
+    vertical-align: middle;
+  }
+
+  .pick-order-table tr.pick-lottery td,
+  .pick-order-table tr.pick-top td { background: var(--border-faint); }
+  .pick-order-table tr.pick-lottery .pick-num,
+  .pick-order-table tr.pick-top .pick-num { color: var(--primary); }
+  .pick-order-table tr.pick-top td:last-child { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--primary); }
+  .pick-order-table td.pick-dollars { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--body-text); }
+
+  /* TEAM AVATAR */
+  .team-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--primary-a12);
+    border: 1px solid var(--border);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12px;
+    color: var(--primary);
+    flex-shrink: 0;
+    letter-spacing: 0.04em;
+  }
+
+  .team-with-avatar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
   /* FOOTER */
   footer {
@@ -628,12 +721,12 @@
   <div class="header-inner">
     <div>
       <span class="header-eyebrow">The Front Office &middot; Fantasy League Rules</span>
-      <h1 class="header-title"><span class="header-title-top">MLB</span><em class="header-title-em">Ballaholics</em></h1>
+      <h1 class="header-title"><span class="header-title-top">MLB</span><span class="header-title-em">Ballaholics</span></h1>
     </div>
     <div class="header-right">
       <div class="sport-toggle">
-        <button class="sport-btn active" id="btn-baseball">⚾ Baseball</button>
-        <button class="sport-btn" id="btn-football">🏈 Football</button>
+        <button type="button" class="sport-btn active" id="btn-baseball" data-sport="baseball" aria-label="Baseball" aria-pressed="true">⚾ Baseball</button>
+        <button type="button" class="sport-btn" id="btn-football" data-sport="football" aria-label="Football" aria-pressed="false">🏈 Football</button>
       </div>
       <span class="header-date" id="header-date"></span>
     </div>
@@ -644,16 +737,18 @@
 <nav>
   <div class="nav-inner">
     <div class="nav-sport-items" id="nav-baseball">
-      <a class="nav-item active" href="#keepers">Keepers</a>
+      <a class="nav-item" href="#keepers">Keepers</a>
       <a class="nav-item" href="#rookies">Rookies</a>
       <a class="nav-item" href="#auction">Auction $</a>
       <a class="nav-item" href="#pitching">Pitching Limit</a>
       <a class="nav-item" href="#playoffs">Playoffs</a>
+      <a class="nav-item" href="#payouts">Payouts</a>
       <a class="nav-item" href="#dollars-table">2026 Dollars</a>
       <a class="nav-item" href="#ledger">Trade Ledger</a>
     </div>
     <div class="nav-sport-items" id="nav-football" hidden>
       <a class="nav-item" href="#fb-rules">Rules</a>
+      <a class="nav-item" href="#fb-keepers">Keepers</a>
       <a class="nav-item" href="#fb-draft-lottery">Draft Lottery</a>
       <a class="nav-item" href="#fb-ledger">Trade Ledger</a>
     </div>
@@ -672,7 +767,7 @@
     <ul class="rules-list">
       <li class="rule-item">
         <span class="rule-num">1.1</span>
-        <div class="rule-body">A player must have at least <strong>1 regular season at bat</strong> or <strong>1 inning pitched</strong> to qualify as keepable.</div>
+        <div class="rule-body">A player must have at least <strong>1 regular season at bat</strong> or <strong>1 inning pitched</strong> to qualify to be kept.</div>
       </li>
       <li class="rule-item">
         <span class="rule-num">1.2</span>
@@ -680,7 +775,7 @@
       </li>
       <li class="rule-item">
         <span class="rule-num">1.3</span>
-        <div class="rule-body">Managers may keep <strong>up to five players</strong> on their roster for the following season, not including rookie keepers (see Section 02).</div>
+        <div class="rule-body">Managers may keep <strong>up to five players</strong>, not including rookie keepers (see Section 02).</div>
       </li>
     </ul>
   </section>
@@ -706,7 +801,7 @@
       </li>
       <li class="rule-item">
         <span class="rule-num">2.4</span>
-        <div class="rule-body">A player who exceeds the rookie threshold during a season may still be kept at the <strong>50% rate the following season</strong>. After that, they must be kept at full value or released.</div>
+        <div class="rule-body">A player who exceeds the rookie threshold for the first time during a season may still be kept at the <strong>50% rate the following season</strong>. After that, they must be kept at full value or released.</div>
       </li>
     </ul>
   </section>
@@ -725,7 +820,7 @@
       <li class="rule-item">
         <span class="rule-num">3.2</span>
         <div class="rule-body">
-          If a manager's keeper salaries total less than the dollars owed to them through trades, the full amount cannot be reflected and <strong>no further adjustment can be made</strong>.
+          If a manager's keeper salaries total less than the dollars owed to them through trades, the full amount owed cannot be reflected and <strong>no further adjustment can be made</strong>.
           <div class="rule-note"><strong>How this works:</strong> ESPN caps all managers at $260 in auction dollars. To reflect traded dollars, the commissioner deducts the equivalent value from a manager's keepers — effectively increasing their spending power.</div>
         </div>
       </li>
@@ -752,7 +847,7 @@
       </li>
       <li class="rule-item">
         <span class="rule-num">4.3</span>
-        <div class="rule-body">If the limit is exceeded, the pitcher with the <strong>latest start time will be moved out of the starting lineup first</strong>. If two or more pitchers share the same start time, the one with the <strong>lowest ESPN % rostered will be moved out</strong>.</div>
+        <div class="rule-body">If the limit is exceeded, the pitcher with the <strong>latest start time</strong> is removed from the starting lineup first. If two or more pitchers share the same start time, the one with the <strong>lowest ESPN % rostered</strong> is removed.</div>
       </li>
     </ul>
   </section>
@@ -771,15 +866,40 @@
     </ul>
   </section>
 
-  <section class="section" id="dollars-table">
+  <section class="section" id="payouts">
     <div class="section-header">
       <span class="section-num">06</span>
+      <h2 class="section-title">Entry &amp; Payouts</h2>
+      <div class="section-divider"></div>
+    </div>
+    <ul class="rules-list">
+      <li class="rule-item">
+        <span class="rule-num">6.1</span>
+        <div class="rule-body">The entry fee is <strong>$200 per manager</strong>, due before the auction draft.</div>
+      </li>
+      <li class="rule-item">
+        <span class="rule-num">6.2</span>
+        <div class="rule-body">
+          Payouts are as follows:
+          <table class="pick-order-table">
+            <tr class="pick-top"><td class="pick-num">1st place</td><td class="pick-sep">&mdash;</td><td>$1,200</td></tr>
+            <tr><td class="pick-num">2nd place</td><td class="pick-sep">&mdash;</td><td class="pick-dollars">$500</td></tr>
+            <tr><td class="pick-num">3rd place</td><td class="pick-sep">&mdash;</td><td class="pick-dollars">$300</td></tr>
+          </table>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="dollars-table">
+    <div class="section-header">
+      <span class="section-num">07</span>
       <h2 class="section-title">2026 Auction Dollar Table</h2>
       <div class="section-divider"></div>
     </div>
     <div class="auction-table-wrap">
       <table class="auction-table">
-        <thead><tr><th>Team</th><th>Auction $</th></tr></thead>
+        <thead><tr><th scope="col">Team</th><th scope="col">Auction $</th></tr></thead>
         <tbody id="auction-tbody"></tbody>
       </table>
     </div>
@@ -787,7 +907,7 @@
 
   <section class="section" id="ledger">
     <div class="section-header">
-      <span class="section-num">07</span>
+      <span class="section-num">08</span>
       <h2 class="section-title">Trade Ledger</h2>
       <div class="section-divider"></div>
     </div>
@@ -806,38 +926,74 @@
     </div>
     <ul class="rules-list">
       <li class="rule-item">
-        <span class="rule-num">—</span>
-        <div class="rule-body">Sundays are for the Boys league rules will be added here.</div>
+        <span class="rule-num">1.1</span>
+        <div class="rule-body">
+          <strong>Rounds 1, 2, and 3 draft picks may not be traded.</strong>
+          <div class="rule-note"><strong>Note:</strong> This is enforced by ESPN and cannot be overridden — attempting to include a top-3 round pick in a trade will be rejected by the platform.</div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="fb-keepers">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Keepers</h2>
+      <div class="section-divider"></div>
+    </div>
+    <ul class="rules-list">
+      <li class="rule-item">
+        <span class="rule-num">2.1</span>
+        <div class="rule-body">The league uses a <strong>21-round snake draft</strong>. Each manager must designate <strong>three keepers</strong> before the keeper lock date — ESPN automatically assigns them to rounds 1, 2, and 3.
+          <div class="rule-note"><strong>Note:</strong> The commissioner will verify all keeper selections after the lock date. If a manager has not set their keepers by the lock date, the commissioner will assign them based on <strong>ADP (Average Draft Position)</strong>.</div>
+        </div>
+      </li>
+      <li class="rule-item">
+        <span class="rule-num">2.2</span>
+        <div class="rule-body">Managers may optionally designate a <strong>fourth keeper</strong> if that player is in their <strong>second NFL season</strong>. This keeper occupies the <strong>round 4</strong> pick.
+          <div class="rule-note"><strong>Note:</strong> The commissioner will verify second-year eligibility after the lock date.</div>
+        </div>
       </li>
     </ul>
   </section>
 
   <section class="section" id="fb-draft-lottery">
     <div class="section-header">
-      <span class="section-num">02</span>
+      <span class="section-num">03</span>
       <h2 class="section-title">Draft Lottery</h2>
       <div class="section-divider"></div>
     </div>
     <ul class="rules-list">
       <li class="rule-item">
-        <span class="rule-num">—</span>
-        <div class="rule-body">Draft pick seeding via dice-based lottery. Odds weighted by postseason results. Details coming soon.</div>
+        <span class="rule-num">3.1</span>
+        <div class="rule-body">Draft order is determined by a combination of <strong>dice lottery</strong> (picks 1–6) and <strong>playoff finish</strong> (picks 7–12).
+          <table class="pick-order-table">
+            <tr class="pick-lottery"><td class="pick-num">Picks 1–6</td><td class="pick-sep">&mdash;</td><td>Dice lottery — see rule 3.2</td></tr>
+            <tr><td class="pick-num">Pick 7</td><td class="pick-sep">&mdash;</td><td>Most points among quarterfinal losers</td></tr>
+            <tr><td class="pick-num">Pick 8</td><td class="pick-sep">&mdash;</td><td>Fewest points among quarterfinal losers</td></tr>
+            <tr><td class="pick-num">Pick 9</td><td class="pick-sep">&mdash;</td><td>Winner of the 3rd place match</td></tr>
+            <tr><td class="pick-num">Pick 10</td><td class="pick-sep">&mdash;</td><td>Loser of the 3rd place match</td></tr>
+            <tr><td class="pick-num">Pick 11</td><td class="pick-sep">&mdash;</td><td>Runner-up (loser of the championship match)</td></tr>
+            <tr><td class="pick-num">Pick 12</td><td class="pick-sep">&mdash;</td><td>Champion (winner of the championship match)</td></tr>
+          </table>
+        </div>
+      </li>
+      <li class="rule-item">
+        <span class="rule-num">3.2</span>
+        <div class="rule-body">Picks 1–6 are determined by a <strong>dice lottery</strong> using 20-sided dice (d20). Each non-playoff team accumulates dice over <strong>three consolation rounds</strong> — a <strong>win earns 4 dice</strong>, a <strong>loss earns 2 dice</strong>. The commissioner rolls each manager's accumulated dice and sums the result. The manager with the <strong>highest total</strong> receives pick 1, with remaining picks assigned from highest to lowest total.
+          <div class="rule-note"><strong>Tiebreaker:</strong> Total points scored across all three consolation rounds — the manager with more points receives the better pick.</div>
+        </div>
       </li>
     </ul>
   </section>
 
   <section class="section" id="fb-ledger">
     <div class="section-header">
-      <span class="section-num">03</span>
+      <span class="section-num">04</span>
       <h2 class="section-title">Trade Ledger</h2>
       <div class="section-divider"></div>
     </div>
-    <ul class="rules-list">
-      <li class="rule-item">
-        <span class="rule-num">—</span>
-        <div class="rule-body">Trade history will be added here.</div>
-      </li>
-    </ul>
+    <div id="fb-trade-seasons"></div>
   </section>
 
 </div><!-- /.football-content -->
@@ -845,10 +1001,83 @@
 </main>
 
 <footer>
-  <p>The Front Office &middot; Fantasy League Rules &middot; <span>2026</span></p>
+  <p>The Front Office &middot; Fantasy League Rules &middot; <span id="footer-year">2026</span></p>
 </footer>
 
 <script>
+function esc(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function headshot(name) {
+  const id = PLAYER_IDS[name];
+  if (!id) return '';
+  return `<img class="player-headshot" src="https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_120,q_auto:best/v1/people/${id}/headshot/67/current" alt="${esc(name)}" onerror="this.style.display='none'">`;
+}
+
+const NFL_PLAYER_IDS = {
+  "DJ Moore":              3915416,
+  "Travis Etienne Jr.":   4239996,
+  "Jonnu Smith":          3054212,
+  "Juwan Johnson":        3929645,
+  "Kendre Miller":        4599739,
+  "Quinshon Judkins":     4685702,
+  "Trey McBride":         4361307,
+  "Jake Ferguson":        4242355,
+  "Deebo Samuel":         3126486,
+  "Baker Mayfield":       3052587,
+  "Nick Chubb":           3128720,
+  "Rico Dowdle":          4038815,
+  "AJ Barner":            4576297,
+  "Nico Collins":         4258173,
+  "Michael Pittman Jr.":  4035687,
+  "Rashid Shaheed":       4032473,
+  "Drake Maye":           4431452,
+  "Chuba Hubbard":        4241416,
+  "Xavier Legette":       4430034,
+  "Jaleel McLaughlin":    4722893,
+  "Ty Johnson":           3915411,
+  "Isaac TeSlaa":         5123663,
+  "Blake Cashman":        3728281,
+  "C.J. Gardner-Johnson": 4034953,
+  "Bam Knight":           4427728,
+  "David Njoku":          3123076,
+};
+
+function nflHeadshot(name) {
+  const id = NFL_PLAYER_IDS[name];
+  if (!id) return '';
+  return `<img class="player-headshot" src="https://a.espncdn.com/i/headshots/nfl/players/full/${id}.png" alt="${esc(name)}" onerror="this.style.display='none'">`;
+}
+
+function formatAsset(a, headshotFn) {
+  headshotFn = headshotFn || headshot;
+  if (a.startsWith('$')) {
+    return `<span class="trade-asset cash-asset"><span class="badge badge-cash">${esc(a)}</span></span>`;
+  }
+  if (a.startsWith('PICK:')) {
+    const label = a.slice(5);
+    return `<span class="trade-asset pick-asset"><span class="badge badge-pick">${esc(label)}</span></span>`;
+  }
+  if (a.startsWith('DROP:')) {
+    const label = a.slice(5);
+    return `<span class="trade-asset dropped-asset"><span class="badge badge-dropped">dropped: ${esc(label)}</span></span>`;
+  }
+  const parts = a.split(', ');
+  const name = parts[0];
+  const pos = parts.slice(1).join(', ');
+  const img = headshotFn(name);
+  return `<span class="trade-asset player-asset">${img}<span class="player-info"><span class="player-name">${esc(name)}</span>${pos ? `<span class="pos">${esc(pos)}</span>` : ''}</span></span>`;
+}
+
+function teamAvatar(name) {
+  const words = name.trim().split(/\s+/);
+  const initials = words.length >= 2
+    ? words[0][0].toUpperCase() + words[1][0].toUpperCase()
+    : words[0][0].toUpperCase();
+  return `<span class="team-avatar">${esc(initials)}</span>`;
+}
+
 const auctionData = [
   { team: "Durham Bulls", dollars: 296 },
   { team: "Cook's Bay Honey Badgers", dollars: 242 },
@@ -862,11 +1091,9 @@ const auctionData = [
   { team: "Booze Broads Ball n Bullshit", dollars: 270 },
 ];
 
-const tbody = document.getElementById('auction-tbody');
-const tbodyRows = auctionData.map(row =>
-  `<tr><td>${esc(row.team)}</td><td class="dollars">$${row.dollars}</td></tr>`
-);
-tbody.innerHTML = tbodyRows.join('');
+document.getElementById('auction-tbody').innerHTML = auctionData
+  .map(row => `<tr><td><span class="team-with-avatar">${teamAvatar(row.team)}<span>${esc(row.team)}</span></span></td><td class="dollars">$${row.dollars}</td></tr>`)
+  .join('');
 
 const trades = [
   { season: "2025", date: "Wed Mar 19", parties: [{ team: "Yankee Clippers", gives: ["Christian Yelich, Mil LF", "Josh Hader, Hou RP", "$7"] }, { team: "Ricky Vaughn Wild Things", gives: ["Xavier Edwards, Mia SS", "Paul Goldschmidt, NYY 1B"] }] },
@@ -883,9 +1110,9 @@ const trades = [
   { season: "2025", date: "Sat Jul 19", parties: [{ team: "Ricky Vaughn Wild Things", gives: ["Julio Rodriguez, Sea CF", "$30"] }, { team: "Hanshin Tigers", gives: ["Andres Munoz, Sea RP", "Kyle Tucker, ChC RF"] }] },
   { season: "2025", date: "Sat Jul 19", parties: [{ team: "Ricky Vaughn Wild Things", gives: ["Spencer Torkelson, Det 1B", "$8"] }, { team: "Hanshin Tigers", gives: ["Josh Naylor, Ari 1B"] }] },
   { season: "2025", date: "Mon Jul 21", parties: [{ team: "La Flama Blanca", gives: ["$15"] }, { team: "Durham Bulls", gives: ["Blake Snell, LAD SP"] }] },
-  { season: "2025", date: "Mon Jul 21", parties: [{ team: "Ricky Vaughn Wild Things", gives: ["Grant Holmes, Atl RP", "$5"] }, { team: "Macon Bacon", gives: ["Robert Suarez, SD RP"] }] },
+  { season: "2025", date: "Mon Jul 21", parties: [{ team: "Ricky Vaughn Wild Things", gives: ["Grant Holmes, Atl RP", "$5"] }, { team: "Big Wood Energy", gives: ["Robert Suarez, SD RP"] }] },
   { season: "2026off", date: "Sun Feb 1", parties: [{ team: "Springfield Isotopes", gives: ["Mookie Betts, LAD SS", "$5"] }, { team: "Ricky Vaughn Wild Things", gives: ["Rafael Devers, SF DH"] }] },
-  { season: "2026off", date: "Thu Feb 5", parties: [{ team: "Yankee Clippers", gives: ["Ben Rice, NYY 1B", "Jackson Merrill, SD CF"] }, { team: "Ethan's Excellent Team", gives: ["$5"] }] },
+  { season: "2026off", date: "Thu Feb 5", parties: [{ team: "Yankee Clippers", gives: ["Ben Rice, NYY 1B", "Jackson Merrill, SD CF"] }, { team: "Big Wood Energy", gives: ["$5"] }] },
   { season: "2026off", date: "Thu Feb 5", parties: [{ team: "Booze Broads Ball n Bullshit", gives: ["Pete Alonso, BAL 1B", "Isaac Collins, KC LF"] }, { team: "Durham Bulls", gives: ["$15"] }] },
   { season: "2026off", date: "Thu Feb 5", parties: [{ team: "Cook's Bay Honey Badgers", gives: ["Tarik Skubal, DET SP"] }, { team: "Durham Bulls", gives: ["$7"] }] },
   { season: "2026off", date: "Wed Feb 11", parties: [{ team: "Yankee Clippers", gives: ["Samuel Basallo, BAL C"] }, { team: "Ricky Vaughn Wild Things", gives: ["Robert Suarez, ATL RP", "$2"] }] },
@@ -918,114 +1145,157 @@ const PLAYER_IDS = {
   "Giancarlo Stanton":  519317,
 };
 
-function esc(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function headshot(name) {
-  const id = PLAYER_IDS[name];
-  if (!id) return '';
-  return `<img class="player-headshot" src="https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_120,q_auto:best/v1/people/${id}/headshot/67/current" alt="${esc(name)}" onerror="this.style.display='none'">`;
-}
-
-function formatAsset(a) {
-  if (a.startsWith('$')) return `<span class="trade-asset cash-asset"><span class="cash">${esc(a)}</span></span>`;
-  const parts = a.split(', ');
-  const name = parts[0];
-  const pos = parts.slice(1).join(', ');
-  const img = headshot(name);
-  return `<span class="trade-asset player-asset">${img}<span class="player-info"><span class="player-name">${esc(name)}</span>${pos ? `<span class="pos">${esc(pos)}</span>` : ''}</span></span>`;
-}
-
-const seasons = {
-  "2025 Season":    trades.filter(t => t.season === "2025"),
-  "2026 Preseason": trades.filter(t => t.season === "2026off"),
-};
-
-const seasonsEl = document.getElementById('trade-seasons');
-const seasonBlocks = [];
-const seasonKeys = Object.keys(seasons);
-const lastIdx = seasonKeys.length - 1;
-seasonKeys.forEach((label, idx) => {
-  const seasonTrades = seasons[label];
-  if (!seasonTrades.length) return;
-  const tradesHtml = seasonTrades.map(trade => {
-    const [t1, t2] = trade.parties;
-    return `
-      <div class="trade-group">
-        <div class="trade-date">${esc(trade.date)}</div>
-        <div class="trade-card">
-          <div class="trade-parties">
-            <div class="trade-side"><div class="trade-team">${esc(t1.team)}</div><div class="trade-assets">${t1.gives.map(formatAsset).join('')}</div></div>
-            <div class="trade-arrow">⇄</div>
-            <div class="trade-side"><div class="trade-team">${esc(t2.team)}</div><div class="trade-assets">${t2.gives.map(formatAsset).join('')}</div></div>
+// Shared season ledger renderer
+function renderLedger(elementId, seasonMap, headshotFn) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  headshotFn = headshotFn || headshot;
+  const keys = Object.keys(seasonMap).filter(k => seasonMap[k].length > 0);
+  const lastIdx = keys.length - 1;
+  const blocks = [];
+  keys.forEach((label, idx) => {
+    const seasonTrades = seasonMap[label];
+    const tradesHtml = seasonTrades.map(trade => {
+      const [t1, t2] = trade.parties;
+      return `
+        <div class="trade-group">
+          <div class="trade-date">${esc(trade.date)}</div>
+          <div class="trade-card">
+            <div class="trade-parties">
+              <div class="trade-side"><div class="trade-team team-with-avatar">${teamAvatar(t1.team)}<span>${esc(t1.team)}</span></div><div class="trade-assets">${t1.gives.map(a => formatAsset(a, headshotFn)).join('')}</div></div>
+              <div class="trade-arrow">⇄</div>
+              <div class="trade-side"><div class="trade-team team-with-avatar">${teamAvatar(t2.team)}<span>${esc(t2.team)}</span></div><div class="trade-assets">${t2.gives.map(a => formatAsset(a, headshotFn)).join('')}</div></div>
+            </div>
           </div>
-        </div>
-      </div>`;
-  }).join('');
-  const isOpen = idx === lastIdx;
-  seasonBlocks.push(`
-    <div class="season-block ${isOpen ? 'open' : ''}">
-      <button class="season-toggle" aria-expanded="${isOpen}">
-        <div class="season-toggle-left">
-          <span class="season-label">${esc(label)}</span>
-          <span class="season-count">${seasonTrades.length} trade${seasonTrades.length !== 1 ? 's' : ''}</span>
-        </div>
-        <span class="season-chevron">▼</span>
-      </button>
-      <div class="season-body"><div class="trade-timeline">${tradesHtml}</div></div>
-    </div>`);
-});
-seasonsEl.innerHTML = seasonBlocks.join('');
-
-// Season block toggle — delegated, no inline handlers
-document.getElementById('trade-seasons').addEventListener('click', e => {
-  const btn = e.target.closest('.season-toggle');
-  if (!btn) return;
-  const block = btn.closest('.season-block');
-  const isOpen = block.classList.toggle('open');
-  btn.setAttribute('aria-expanded', isOpen);
-});
-
-// Nav click — smooth scroll with sticky nav offset accounted for
-document.querySelectorAll('.nav-item').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const target = document.querySelector(link.getAttribute('href'));
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
-    link.classList.add('active');
+        </div>`;
+    }).join('');
+    const isOpen = idx === lastIdx;
+    const bodyId = `season-body-${elementId}-${idx}`;
+    blocks.push(`
+      <div class="season-block ${isOpen ? 'open' : ''}">
+        <button type="button" class="season-toggle" aria-expanded="${isOpen}" aria-controls="${bodyId}">
+          <div class="season-toggle-left">
+            <span class="season-label">${esc(label)}</span>
+            <span class="season-count">${seasonTrades.length} trade${seasonTrades.length !== 1 ? 's' : ''}</span>
+          </div>
+          <span class="season-chevron">▼</span>
+        </button>
+        <div class="season-body" id="${bodyId}"><div class="trade-timeline">${tradesHtml}</div></div>
+      </div>`);
   });
-});
+  el.innerHTML = blocks.join('');
+}
 
-// Sync scroll-margin-top with actual nav height — update on resize too
+// Baseball ledger — group trades in one pass
+const SEASON_LABELS = { "2025": "2025 Season", "2026off": "2026 Preseason" };
+const seasons = trades.reduce((acc, t) => {
+  const key = SEASON_LABELS[t.season] || t.season;
+  (acc[key] = acc[key] || []).push(t);
+  return acc;
+}, { "2025 Season": [], "2026 Preseason": [] });
+renderLedger('trade-seasons', seasons);
+
+const fbTrades = [
+  { season: "2025", date: "Tue Sep 16", parties: [
+    { team: "Wilson We Got A Problem", gives: ["DJ Moore, Chi WR", "PICK:2026 R9"] },
+    { team: "Team McKay",              gives: ["Jonnu Smith, Pit TE", "Travis Etienne Jr., Jax RB", "PICK:2026 R12"] }
+  ]},
+  { season: "2025", date: "Thu Sep 18", parties: [
+    { team: "Springfield Atoms",  gives: ["Kendre Miller, NO RB", "PICK:2026 R5"] },
+    { team: "Morning Chubb",      gives: ["Quinshon Judkins, Cle RB"] }
+  ]},
+  { season: "2025", date: "Wed Oct 15", parties: [
+    { team: "Dirty Randy and the Pocket Dogs", gives: ["Juwan Johnson, NO TE", "David Njoku, Cle TE", "PICK:2026 R4", "PICK:2026 R8"] },
+    { team: "Springfield Atoms",              gives: ["Deebo Samuel, Wsh WR", "Trey McBride, Ari TE", "PICK:2026 R12", "PICK:2026 R13"] }
+  ]},
+  { season: "2025", date: "Wed Nov 26", parties: [
+    { team: "Redskins",          gives: ["Xavier Legette, Car WR", "PICK:2026 R6"] },
+    { team: "Springfield Atoms", gives: ["Travis Etienne Jr., Jax RB"] }
+  ]},
+  { season: "2025", date: "Wed Nov 26", parties: [
+    { team: "I love C Kupps", gives: ["Michael Pittman Jr., Ind WR"] },
+    { team: "Redskins",       gives: ["Isaac TeSlaa, Det WR", "PICK:2026 R7"] }
+  ]},
+  { season: "2025", date: "Wed Nov 26", parties: [
+    { team: "Sarasota Sandsharks", gives: ["Nico Collins, Hou WR"] },
+    { team: "Morning Chubb",       gives: ["Bam Knight, Ari RB", "PICK:2026 R5"] }
+  ]},
+  { season: "2025", date: "Wed Nov 26", parties: [
+    { team: "Sarasota Sandsharks",            gives: ["Rico Dowdle, Car RB", "Blake Cashman, Min LB", "Chuba Hubbard, Car RB", "PICK:2026 R10"] },
+    { team: "Dirty Randy and the Pocket Dogs", gives: ["Ty Johnson, Buf RB", "Rashid Shaheed, Sea WR", "Nick Chubb, Hou RB", "PICK:2026 R6"] }
+  ]},
+  { season: "2025", date: "Wed Nov 26", parties: [
+    { team: "Springfield Atoms", gives: ["Jake Ferguson, Dal TE"] },
+    { team: "Morning Chubb",     gives: ["AJ Barner, Sea TE", "PICK:2026 R12"] }
+  ]},
+  { season: "2025", date: "Wed Nov 26", parties: [
+    { team: "Wilson We Got A Problem", gives: ["DROP:C.J. Gardner-Johnson, Chi S", "PICK:2026 R8"] },
+    { team: "Team Woods",              gives: ["Drake Maye, NE QB"] }
+  ]},
+  { season: "2025", date: "Wed Nov 26", parties: [
+    { team: "Dirty Randy and the Pocket Dogs", gives: ["DROP:Jaleel McLaughlin, Den RB", "PICK:2026 R10", "Baker Mayfield, TB QB"] },
+    { team: "Wilson We Got A Problem",         gives: ["PICK:2026 R21"] }
+  ]},
+];
+
+// Football ledger
+const fbSeasons = { "2025 Season": fbTrades };
+renderLedger('fb-trade-seasons', fbSeasons, nflHeadshot);
+
+// Cached nav element for scroll observer
 const nav = document.querySelector('nav');
-let sections = document.querySelectorAll('.section');
 let observer;
+let activeNavItem = null; // tracks current active nav item for O(1) swap
 
-function buildObserver(navHeight) {
+function buildObserver(navHeight, sectionList) {
   if (observer) observer.disconnect();
   observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const id = entry.target.id;
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.getAttribute('href') === `#${id}`));
+        const next = _DOM.navMap.get(`#${entry.target.id}`);
+        if (next && next !== activeNavItem) {
+          if (activeNavItem) activeNavItem.classList.remove('active');
+          next.classList.add('active');
+          activeNavItem = next;
+        }
       }
     });
   }, { rootMargin: `-${navHeight}px 0px -60% 0px`, threshold: 0 });
-  sections.forEach(s => observer.observe(s));
+  sectionList.forEach(s => observer.observe(s));
 }
 
 function updateNavOffset() {
   const navHeight = nav.offsetHeight;
-  // Re-query so observer only watches currently visible sections
-  sections = document.querySelectorAll('.baseball-content:not([hidden]) .section, .football-content:not([hidden]) .section');
+  const sections = document.querySelectorAll('.baseball-content:not([hidden]) .section, .football-content:not([hidden]) .section');
   sections.forEach(s => s.style.scrollMarginTop = navHeight + 'px');
-  buildObserver(navHeight);
+  buildObserver(navHeight, sections);
 }
 
-updateNavOffset();
 new ResizeObserver(updateNavOffset).observe(nav);
+
+// Cached DOM refs (queried once at startup)
+const _DOM = {
+  headerImg:          document.querySelector('.header-img'),
+  titleTop:           document.querySelector('.header-title-top'),
+  titleEm:            document.querySelector('.header-title-em'),
+  btnBaseball:        document.getElementById('btn-baseball'),
+  btnFootball:        document.getElementById('btn-football'),
+  navBaseball:        document.getElementById('nav-baseball'),
+  navFootball:        document.getElementById('nav-football'),
+  sportToggle:        document.querySelector('.sport-toggle'),
+  main:               document.querySelector('main'),
+  headerDate:         document.getElementById('header-date'),
+  footerYear:         document.getElementById('footer-year'),
+  // Static NodeLists cached as arrays — these elements never change
+  content:            [...document.querySelectorAll('.baseball-content, .football-content')],
+  navItems:           [...document.querySelectorAll('.nav-item')],
+  themeColor:         document.querySelector('meta[name="theme-color"]'),
+};
+// First nav item per sport group — cached for setSport active state
+_DOM.firstNavBaseball = _DOM.navBaseball.querySelector('.nav-item');
+_DOM.firstNavFootball = _DOM.navFootball.querySelector('.nav-item');
+// href→element map for O(1) nav highlight lookup in scroll observer
+_DOM.navMap = new Map(_DOM.navItems.map(n => [n.getAttribute('href'), n]));
 
 // Sport config
 const SPORTS = {
@@ -1045,59 +1315,82 @@ const SPORTS = {
 
 function setSport(sport) {
   const cfg = SPORTS[sport];
+  if (!cfg) return;
+  const isBaseball = sport === 'baseball';
   document.body.dataset.sport = sport;
+  _DOM.themeColor.content = isBaseball ? '#081e3f' : '#2a0a00';
 
-  // Header image
-  const headerImg = document.querySelector('.header-img');
-  headerImg.style.backgroundImage = `url('${cfg.img}')`;
-  headerImg.style.backgroundPosition = cfg.imgPos;
-
-  // Header title
-  document.querySelector('.header-title-top').textContent = cfg.titleTop;
-  document.querySelector('.header-title-em').textContent = cfg.titleEm;
+  // Header image + title
+  _DOM.headerImg.style.backgroundImage = `url('${cfg.img}')`;
+  _DOM.headerImg.style.backgroundPosition = cfg.imgPos;
+  _DOM.titleTop.textContent = cfg.titleTop;
+  _DOM.titleEm.textContent  = cfg.titleEm;
 
   // Toggle buttons
-  document.getElementById('btn-baseball').classList.toggle('active', sport === 'baseball');
-  document.getElementById('btn-football').classList.toggle('active', sport === 'football');
+  _DOM.btnBaseball.classList.toggle('active', isBaseball);
+  _DOM.btnFootball.classList.toggle('active', !isBaseball);
+  _DOM.btnBaseball.setAttribute('aria-pressed', isBaseball);
+  _DOM.btnFootball.setAttribute('aria-pressed', !isBaseball);
 
-  // Show/hide content sections
-  document.querySelectorAll('.baseball-content, .football-content').forEach(el => {
-    el.hidden = !el.classList.contains(`${sport}-content`);
-  });
+  // Show/hide content sections (content[0]=baseball, content[1]=football — order from querySelectorAll)
+  _DOM.content[0].hidden = !isBaseball;
+  _DOM.content[1].hidden = isBaseball;
 
   // Swap nav groups
-  document.getElementById('nav-baseball').hidden = (sport !== 'baseball');
-  document.getElementById('nav-football').hidden = (sport !== 'football');
+  _DOM.navBaseball.hidden = !isBaseball;
+  _DOM.navFootball.hidden = isBaseball;
 
   // Activate first nav item in the visible group
-  const activeNav = document.querySelector(`#nav-${sport} .nav-item`);
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  if (activeNav) activeNav.classList.add('active');
+  if (activeNavItem) activeNavItem.classList.remove('active');
+  activeNavItem = isBaseball ? _DOM.firstNavBaseball : _DOM.firstNavFootball;
+  if (activeNavItem) activeNavItem.classList.add('active');
 
-  // Scroll to top
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // Rebuild observer for newly visible sections
+  // Scroll to top if needed, rebuild observer
+  if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: 'smooth' });
   updateNavOffset();
 
-  localStorage.setItem('sport', sport);
+  try { localStorage.setItem('sport', sport); } catch(e) {}
 }
 
-// Sport toggle buttons
-document.getElementById('btn-baseball').addEventListener('click', () => setSport('baseball'));
-document.getElementById('btn-football').addEventListener('click', () => setSport('football'));
+// Season block toggle — one delegated listener covers both ledger containers
+_DOM.main.addEventListener('click', e => {
+  const btn = e.target.closest('.season-toggle');
+  if (!btn) return;
+  const block = btn.closest('.season-block');
+  if (!block) return;
+  const isOpen = block.classList.toggle('open');
+  btn.setAttribute('aria-expanded', isOpen);
+});
+
+// Nav click — delegated from nav, smooth scroll
+nav.addEventListener('click', e => {
+  const link = e.target.closest('.nav-item');
+  if (!link) return;
+  e.preventDefault();
+  const target = document.getElementById(link.getAttribute('href').slice(1));
+  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (activeNavItem) activeNavItem.classList.remove('active');
+  link.classList.add('active');
+  activeNavItem = link;
+});
+
+// Sport toggle buttons — delegated via data-sport attribute
+_DOM.sportToggle.addEventListener('click', e => {
+  const btn = e.target.closest('[data-sport]');
+  if (btn && btn.dataset.sport !== document.body.dataset.sport) setSport(btn.dataset.sport);
+});
 
 // Init — restore last sport or default to baseball
-setSport(localStorage.getItem('sport') || 'baseball');
-
-
+const _savedSport = (() => { try { return localStorage.getItem('sport') || 'baseball'; } catch(e) { return 'baseball'; } })();
+setSport(_savedSport);
 
 // Auto date from file last-modified
 (function() {
   const d = new Date(document.lastModified);
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const str = `Updated ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-  document.getElementById('header-date').textContent = str;
+  // Use UTC to avoid ±1-day timezone offset on GitHub Pages (server time is UTC)
+  _DOM.headerDate.textContent = 'Updated ' + months[d.getUTCMonth()] + ' ' + d.getUTCDate() + ', ' + d.getUTCFullYear();
+  _DOM.footerYear.textContent = d.getUTCFullYear();
 })();
 </script>
 </body>

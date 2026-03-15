@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Front Office</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚾</text></svg>">
 <meta name="theme-color" content="#081e3f">
 <meta name="description" content="The Front Office — official rules, auction dollar table, and trade ledger for the Ballaholics and Sundays are for the Boys fantasy leagues.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1286,6 +1287,7 @@ const _DOM = {
   main:               document.querySelector('main'),
   headerDate:         document.getElementById('header-date'),
   footerYear:         document.getElementById('footer-year'),
+  favicon:            document.querySelector('link[rel="icon"]'),
   // Static NodeLists cached as arrays — these elements never change
   content:            [...document.querySelectorAll('.baseball-content, .football-content')],
   navItems:           [...document.querySelectorAll('.nav-item')],
@@ -1319,6 +1321,7 @@ function setSport(sport) {
   const isBaseball = sport === 'baseball';
   document.body.dataset.sport = sport;
   _DOM.themeColor.content = isBaseball ? '#081e3f' : '#2a0a00';
+  _DOM.favicon.href = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${isBaseball ? '⚾' : '🏈'}</text></svg>`;
 
   // Header image + title
   _DOM.headerImg.style.backgroundImage = `url('${cfg.img}')`;

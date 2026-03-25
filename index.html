@@ -290,7 +290,7 @@
   .section-header {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     gap: 16px;
     padding-top: 12px;
   }
@@ -372,6 +372,7 @@
     border-radius: 4px;
     overflow: hidden;
     box-shadow: 0 1px 4px var(--shadow-mid);
+    margin-bottom: 16px;
   }
 
   .auction-table {
@@ -665,11 +666,77 @@
     letter-spacing: 0.04em;
   }
 
+  .team-avatar-logo {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .team-avatar-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
   .team-with-avatar {
     display: flex;
     align-items: center;
     gap: 10px;
   }
+
+  /* LEDGER EMPTY STATE */
+  .ledger-empty {
+    padding: 4px 0 12px;
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .ledger-empty strong {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  /* ARCHIVE TOGGLE */
+  .archive-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 10px 0;
+    background: none;
+    border: none;
+    border-top: 1px solid var(--border-faint);
+    width: 100%;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+
+  .archive-toggle:hover { color: var(--primary); }
+
+  .archive-chevron {
+    font-size: 10px;
+    transition: transform 0.25s ease;
+    margin-left: auto;
+  }
+
+  .archive-open .archive-chevron { transform: rotate(180deg); }
+
+  .archive-body {
+    display: none;
+    margin-top: 12px;
+  }
+
+  .archive-open .archive-body { display: block; }
 
   /* FOOTER */
   footer {
@@ -744,7 +811,7 @@
       <a class="nav-item" href="#pitching">Pitching Limit</a>
       <a class="nav-item" href="#playoffs">Playoffs</a>
       <a class="nav-item" href="#payouts">Payouts</a>
-      <a class="nav-item" href="#dollars-table">2026 Dollars</a>
+      <a class="nav-item" href="#dollars-table">2027 Dollars</a>
       <a class="nav-item" href="#ledger">Trade Ledger</a>
     </div>
     <div class="nav-sport-items" id="nav-football" hidden>
@@ -895,7 +962,7 @@
   <section class="section" id="dollars-table">
     <div class="section-header">
       <span class="section-num">07</span>
-      <h2 class="section-title">2026 Auction Dollar Table</h2>
+      <h2 class="section-title">2027 Auction Dollar Table</h2>
       <div class="section-divider"></div>
     </div>
     <div class="auction-table-wrap">
@@ -913,6 +980,15 @@
       <div class="section-divider"></div>
     </div>
     <div id="trade-seasons"></div>
+    <div class="archive-wrap">
+      <button type="button" class="archive-toggle" id="archive-toggle" aria-expanded="false" aria-controls="archive-body">
+        Previous Seasons
+        <span class="archive-chevron">▼</span>
+      </button>
+      <div class="archive-body" id="archive-body">
+        <div id="trade-archive"></div>
+      </div>
+    </div>
   </section>
 
 </div><!-- /.baseball-content -->
@@ -1071,32 +1147,49 @@ function formatAsset(a, headshotFn) {
   return `<span class="trade-asset player-asset">${img}<span class="player-info"><span class="player-name">${esc(name)}</span>${pos ? `<span class="pos">${esc(pos)}</span>` : ''}</span></span>`;
 }
 
+const TEAM_LOGOS = {
+  "Vancouver Canadians":          "https://i.pinimg.com/736x/d6/18/ba/d618ba4170b9f56bf811b253f36cca2c.jpg",
+  "Cook's Bay Honey Badgers":     "https://pbs.twimg.com/profile_images/669003651663310849/Bkcg-Mz4.jpg",
+  "Hanshin Tigers":               "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/bc564de0-2722-11f1-a3db-1b8e3b53005a",
+  "La Flama Blanca":              "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/d3814f90-8a71-11f0-afb5-e14f006a2a34",
+  "Ricky Vaughn Wild Things":     "https://pbs.twimg.com/profile_images/952557332537495553/_G77e_he_400x400.jpg",
+  "Yankee Clippers":              "https://media.tenor.com/-qWOA3AuT0gAAAAd/peacock-let-me-fly.gif",
+  "Springfield Isotopes":         "https://i.imgur.com/99UDAnB.png",
+  "Booze Broads Ball n Bullshit": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/37449e30-b653-11f0-b1c3-bf61c28fbeb9",
+};
+
 function teamAvatar(name) {
   const words = name.trim().split(/\s+/);
   const initials = words.length >= 2
     ? words[0][0].toUpperCase() + words[1][0].toUpperCase()
     : words[0][0].toUpperCase();
+  const logo = TEAM_LOGOS[name];
+  if (logo) {
+    return `<span class="team-avatar team-avatar-logo"><img src="${logo}" alt="${esc(name)}" onerror="this.closest('.team-avatar').classList.remove('team-avatar-logo');this.replaceWith(document.createTextNode('${esc(initials)}'))"></span>`;
+  }
   return `<span class="team-avatar">${esc(initials)}</span>`;
 }
 
 const auctionData = [
-  { team: "Durham Bulls", dollars: 296 },
-  { team: "Cook's Bay Honey Badgers", dollars: 242 },
-  { team: "Hanshin Tigers", dollars: 300 },
-  { team: "La Flama Blanca", dollars: 225 },
-  { team: "Big Wood Energy", dollars: 258 },
-  { team: "Vancouver Canadians", dollars: 245 },
-  { team: "Ricky Vaughn Wild Things", dollars: 217 },
-  { team: "Yankee Clippers", dollars: 313 },
-  { team: "Springfield Isotopes", dollars: 234 },
-  { team: "Booze Broads Ball n Bullshit", dollars: 270 },
+  { team: "Durham Bulls", dollars: 260 },
+  { team: "Cook's Bay Honey Badgers", dollars: 260 },
+  { team: "Hanshin Tigers", dollars: 260 },
+  { team: "La Flama Blanca", dollars: 260 },
+  { team: "Big Wood Energy", dollars: 260 },
+  { team: "Vancouver Canadians", dollars: 260 },
+  { team: "Ricky Vaughn Wild Things", dollars: 260 },
+  { team: "Yankee Clippers", dollars: 260 },
+  { team: "Springfield Isotopes", dollars: 260 },
+  { team: "Booze Broads Ball n Bullshit", dollars: 260 },
 ];
 
 document.getElementById('auction-tbody').innerHTML = auctionData
   .map(row => `<tr><td><span class="team-with-avatar">${teamAvatar(row.team)}<span>${esc(row.team)}</span></span></td><td class="dollars">$${row.dollars}</td></tr>`)
   .join('');
 
-const trades = [
+const trades = [];
+
+const archivedTrades = [
   { season: "2025", date: "Wed Mar 19", parties: [{ team: "Yankee Clippers", gives: ["Christian Yelich, Mil LF", "Josh Hader, Hou RP", "$7"] }, { team: "Ricky Vaughn Wild Things", gives: ["Xavier Edwards, Mia SS", "Paul Goldschmidt, NYY 1B"] }] },
   { season: "2025", date: "Wed May 7", parties: [{ team: "Springfield Isotopes", gives: ["TJ Friedl, Cin CF", "$3"] }, { team: "Yankee Clippers", gives: ["Nolan Arenado, StL 3B"] }] },
   { season: "2025", date: "Thu May 8", parties: [{ team: "Ricky Vaughn Wild Things", gives: ["Josh Hader, Hou RP", "$10"] }, { team: "Durham Bulls", gives: ["Ketel Marte, Ari 2B"] }] },
@@ -1153,6 +1246,10 @@ function renderLedger(elementId, seasonMap, headshotFn) {
   if (!el) return;
   headshotFn = headshotFn || headshot;
   const keys = Object.keys(seasonMap).filter(k => seasonMap[k].length > 0);
+  if (keys.length === 0 && elementId === 'trade-seasons') {
+    el.innerHTML = `<div class="ledger-empty"><strong>THE COMMISSIONER SPEAKS.</strong>The 2026 season has begun and not a single trade has been made. This league is an embarrassment. Ricky Vaughn is inconsolable.</div>`;
+    return;
+  }
   const lastIdx = keys.length - 1;
   const blocks = [];
   keys.forEach((label, idx) => {
@@ -1188,14 +1285,23 @@ function renderLedger(elementId, seasonMap, headshotFn) {
   el.innerHTML = blocks.join('');
 }
 
-// Baseball ledger — group trades in one pass
-const SEASON_LABELS = { "2025": "2025 Season", "2026off": "2026 Preseason" };
+// Baseball ledger — 2026 season (empty until trades happen)
+const SEASON_LABELS = { "2026": "2026 Season" };
 const seasons = trades.reduce((acc, t) => {
   const key = SEASON_LABELS[t.season] || t.season;
   (acc[key] = acc[key] || []).push(t);
   return acc;
-}, { "2025 Season": [], "2026 Preseason": [] });
+}, { "2026 Season": [] });
 renderLedger('trade-seasons', seasons);
+
+// Trade archive — 2025 season + 2026 preseason
+const ARCHIVE_LABELS = { "2025": "2025 Season", "2026off": "2026 Preseason" };
+const archivedSeasons = archivedTrades.reduce((acc, t) => {
+  const key = ARCHIVE_LABELS[t.season] || t.season;
+  (acc[key] = acc[key] || []).push(t);
+  return acc;
+}, { "2025 Season": [], "2026 Preseason": [] });
+renderLedger('trade-archive', archivedSeasons);
 
 const fbTrades = [
   { season: "2025", date: "Tue Sep 16", parties: [
@@ -1356,14 +1462,23 @@ function setSport(sport) {
   try { localStorage.setItem('sport', sport); } catch(e) {}
 }
 
-// Season block toggle — one delegated listener covers both ledger containers
+// Season block + archive toggle — one delegated listener covers all
 _DOM.main.addEventListener('click', e => {
   const btn = e.target.closest('.season-toggle');
-  if (!btn) return;
-  const block = btn.closest('.season-block');
-  if (!block) return;
-  const isOpen = block.classList.toggle('open');
-  btn.setAttribute('aria-expanded', isOpen);
+  if (btn) {
+    const block = btn.closest('.season-block');
+    if (!block) return;
+    const isOpen = block.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen);
+    return;
+  }
+  const archBtn = e.target.closest('.archive-toggle');
+  if (archBtn) {
+    const wrap = archBtn.closest('.archive-wrap');
+    if (!wrap) return;
+    const isOpen = wrap.classList.toggle('archive-open');
+    archBtn.setAttribute('aria-expanded', isOpen);
+  }
 });
 
 // Nav click — delegated from nav, smooth scroll
